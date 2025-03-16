@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify
 from models.productos import Productos, ProductosSchema
+from models.heladeria import Heladeria
 
 api_blueprint = Blueprint("api", __name__, url_prefix = "/api")
 producto_schema = ProductosSchema()
@@ -81,3 +82,17 @@ def costos(id):
         "data": costo,
         "code": 200
     })
+
+@api_blueprint.route("/productos/ventas/<int:id>", methods=["GET"])
+def ventas(id):
+    try:
+       Heladeria.ventas(id)
+       return jsonify({
+           "mensaje": f'Producto vendido',
+           "code": 200
+       })
+    except ValueError as e:
+        return jsonify({
+            "mensaje": f'Error en venta: {e}',
+            "code": 404
+        })

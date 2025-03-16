@@ -13,6 +13,11 @@ class Ingredientes(db.Model):
         ingredientes = Ingredientes.query.all()
         return ingredientes
 
+    @staticmethod
+    def detalle(id):
+        ingrediente = Ingredientes.query.filter_by(id=id).first()
+        return ingrediente
+
 class IngredientesSchema(ma.Schema):
     class Meta:
         model = Ingredientes

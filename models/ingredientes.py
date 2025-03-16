@@ -18,6 +18,11 @@ class Ingredientes(db.Model):
         ingrediente = Ingredientes.query.filter_by(id=id).first()
         return ingrediente
 
+    @staticmethod
+    def detalle_x_nombre(nombre):
+        producto = Ingredientes.query.filter_by(nombre=nombre).first()
+        return producto
+
 class IngredientesSchema(ma.Schema):
     class Meta:
         model = Ingredientes

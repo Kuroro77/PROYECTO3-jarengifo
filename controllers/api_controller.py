@@ -122,3 +122,14 @@ def detalle_ingrediente(id):
         "data": ingrediente_schema.dump(detalle_ingrediente),
         "code": 200
     })
+
+@api_blueprint.route("/ingredientes/<string:nombre>", methods=["GET"])
+def detalle_x_nombre_ingrediente(nombre):
+    ingredientes = Ingredientes()
+    detalle_ingrediente = ingredientes.detalle_x_nombre(nombre)
+
+    return jsonify({
+        "mensaje": f'Detalle ingrediente',
+        "data": ingrediente_schema.dump(detalle_ingrediente),
+        "code": 200
+    })

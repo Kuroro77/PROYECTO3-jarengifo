@@ -1,5 +1,6 @@
 from config.db import db, ma
 from models.ingredientes import Ingredientes
+from funciones import Funciones
 
 class Productos(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,6 +29,22 @@ class Productos(db.Model):
     def detalle_x_nombre(nombre):
         producto = Productos.query.filter_by(nombre=nombre).first()
         return producto
+
+    @staticmethod
+    def calcular_calorias_copa(calorias: list) -> float:
+        calorias_total = Funciones.calorias_x_producto(calorias)
+        return calorias_total
+
+    @staticmethod
+    def calcular_calorias_malteada(calorias: list) -> float:
+        calorias_crema = 200
+        calorias_totales = 0
+
+        for caloria in calorias:
+            calorias_totales += caloria
+
+        calorias_total = calorias_totales + calorias_crema
+        return calorias_total
 
 class ProductosSchema(ma.Schema):
     class Meta:

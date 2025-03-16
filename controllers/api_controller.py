@@ -37,3 +37,20 @@ def detalle_x_nombre(nombre):
         "data": producto_schema.dump(detalle_producto),
         "code": 200
     })
+
+@api_blueprint.route("/productos/calorias/<int:id>", methods=["GET"])
+def calorias(id):
+    producto = Productos.detalle(id)
+    tipo = producto.tipo
+    calorias_x_ingredientes = [producto.ingrediente_uno.calorias, producto.ingrediente_dos.calorias, producto.ingrediente_tres.calorias]
+
+    if tipo =='COPA':
+        calorias = producto.calcular_calorias_copa(calorias_x_ingredientes)
+    elif tipo =='MALTEADA':
+        calorias = producto.calcular_calorias_malteada(calorias_x_ingredientes)
+
+    return jsonify({
+        "mensaje": f'Calorias producto',
+        "data": calorias,
+        "code": 200
+    })

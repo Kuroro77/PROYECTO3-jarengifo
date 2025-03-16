@@ -36,6 +36,12 @@ class Ingredientes(db.Model):
         db.session.commit()
         return inventario
 
+    @staticmethod
+    def renovar(id) -> None:
+        Ingredientes.query.filter_by(id=id).update({"inventario": 0})
+        db.session.commit()
+        return True
+
 class IngredientesSchema(ma.Schema):
     class Meta:
         model = Ingredientes

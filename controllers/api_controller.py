@@ -159,3 +159,13 @@ def abastecer(id):
         "mensaje": f'Ingrediente abastecido',
         "code": 200
     })
+
+@api_blueprint.route("/ingredientes/renovar/<int:id>", methods=["GET"])
+def renovar(id):
+    ingrediente = Ingredientes.detalle(id)
+    ingrediente.renovar(id)
+
+    return jsonify({
+        "mensaje": f'Inventario renovado',
+        "code": 200
+    })

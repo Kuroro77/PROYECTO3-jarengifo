@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify
 from models.productos import Productos, ProductosSchema
 from models.heladeria import Heladeria
+from models.ingredientes import Ingredientes
 
 api_blueprint = Blueprint("api", __name__, url_prefix = "/api")
 producto_schema = ProductosSchema()
@@ -96,3 +97,14 @@ def ventas(id):
             "mensaje": f'Error en venta: {e}',
             "code": 404
         })
+
+@api_blueprint.route("/ingredientes")
+def ingredientes():
+    ingredientes = Ingredientes()
+    lista_ingredientes = ingredientes.listar()
+
+    return jsonify({
+        "mensaje": f'Lista ingredientes',
+        "data": productos_schema.dump(lista_ingredientes),
+        "code": 200
+    })

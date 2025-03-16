@@ -133,3 +133,14 @@ def detalle_x_nombre_ingrediente(nombre):
         "data": ingrediente_schema.dump(detalle_ingrediente),
         "code": 200
     })
+
+@api_blueprint.route("/ingredientes/sano/<int:id>", methods=["GET"])
+def sano(id):
+    ingrediente = Ingredientes.detalle(id)
+    es_sano = ingrediente.es_sano(ingrediente.calorias, ingrediente.es_vegetariano)
+
+    return jsonify({
+        "mensaje": f'Ingredinete sano ?',
+        "data": es_sano,
+        "code": 200
+    })

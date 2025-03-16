@@ -1,4 +1,5 @@
 from config.db import db, ma
+from funciones import Funciones
 
 class Ingredientes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -22,6 +23,11 @@ class Ingredientes(db.Model):
     def detalle_x_nombre(nombre):
         producto = Ingredientes.query.filter_by(nombre=nombre).first()
         return producto
+
+    @staticmethod
+    def es_sano(calorias, es_vegetariano) -> bool:
+        sano = Funciones.es_sano(calorias, es_vegetariano)
+        return sano
 
 class IngredientesSchema(ma.Schema):
     class Meta:

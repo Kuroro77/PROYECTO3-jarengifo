@@ -51,6 +51,16 @@ class Productos(db.Model):
         rentabilidad = Funciones.rentabilidad_x_producto(precio_publico, ingredientes1, ingredientes2, ingredientes3)
         return rentabilidad
 
+    @staticmethod
+    def calcular_costo_copa(ingredientes1, ingredientes2, ingredientes3) -> int:
+        costo = Funciones.costo_produccion(ingredientes1, ingredientes2, ingredientes3)
+        return costo
+
+    @staticmethod
+    def calcular_costo_malteada() -> int:
+        uso_vaso_plastico = 500
+        return uso_vaso_plastico
+
 class ProductosSchema(ma.Schema):
     class Meta:
         model = Productos

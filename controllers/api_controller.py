@@ -65,3 +65,19 @@ def rentabilidad(id):
         "data": rentabilidad,
         "code": 200
     })
+
+@api_blueprint.route("/productos/costos/<int:id>", methods=["GET"])
+def costos(id):
+    producto = Productos.detalle(id)
+    tipo = producto.tipo
+
+    if tipo == 'COPA':
+        costo = producto.calcular_costo_copa(producto.ingrediente_uno, producto.ingrediente_dos, producto.ingrediente_tres)
+    elif tipo == 'MALTEADA':
+        costo = producto.calcular_costo_malteada()
+
+    return jsonify({
+        "mensaje": f'Costo producto',
+        "data": costo,
+        "code": 200
+    })

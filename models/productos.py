@@ -24,6 +24,11 @@ class Productos(db.Model):
         producto = Productos.query.filter_by(id=id).first()
         return producto
 
+    @staticmethod
+    def detalle_x_nombre(nombre):
+        producto = Productos.query.filter_by(nombre=nombre).first()
+        return producto
+
 class ProductosSchema(ma.Schema):
     class Meta:
         model = Productos

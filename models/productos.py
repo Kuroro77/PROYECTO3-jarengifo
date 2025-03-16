@@ -46,6 +46,11 @@ class Productos(db.Model):
         calorias_total = calorias_totales + calorias_crema
         return calorias_total
 
+    @staticmethod
+    def calcular_rentabilidad(precio_publico, ingredientes1, ingredientes2, ingredientes3) -> int:
+        rentabilidad = Funciones.rentabilidad_x_producto(precio_publico, ingredientes1, ingredientes2, ingredientes3)
+        return rentabilidad
+
 class ProductosSchema(ma.Schema):
     class Meta:
         model = Productos

@@ -54,3 +54,14 @@ def calorias(id):
         "data": calorias,
         "code": 200
     })
+
+@api_blueprint.route("/productos/rentabilidad/<int:id>", methods=["GET"])
+def rentabilidad(id):
+    producto = Productos.detalle(id)
+    rentabilidad = producto.calcular_rentabilidad(producto.precio_publico, producto.ingrediente_uno, producto.ingrediente_dos, producto.ingrediente_tres)
+
+    return jsonify({
+        "mensaje": f'Rentabilidad producto',
+        "data": rentabilidad,
+        "code": 200
+    })

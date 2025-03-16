@@ -29,6 +29,13 @@ class Ingredientes(db.Model):
         sano = Funciones.es_sano(calorias, es_vegetariano)
         return sano
 
+    @staticmethod
+    def abastecer(id, inventario, nuevo_inventario) -> None:
+        inventario += nuevo_inventario
+        Ingredientes.query.filter_by(id=id).update({"inventario": inventario})
+        db.session.commit()
+        return inventario
+
 class IngredientesSchema(ma.Schema):
     class Meta:
         model = Ingredientes

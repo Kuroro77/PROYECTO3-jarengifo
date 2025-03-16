@@ -140,7 +140,22 @@ def sano(id):
     es_sano = ingrediente.es_sano(ingrediente.calorias, ingrediente.es_vegetariano)
 
     return jsonify({
-        "mensaje": f'Ingredinete sano ?',
+        "mensaje": f'Ingrediente sano ?',
         "data": es_sano,
+        "code": 200
+    })
+
+@api_blueprint.route("/ingredientes/abastecer/<int:id>", methods=["GET"])
+def abastecer(id):
+    ingrediente = Ingredientes.detalle(id)
+    tipo = ingrediente.tipo
+
+    if tipo == 'BASE':
+        ingrediente.abastecer(ingrediente.id, ingrediente.inventario, 5)
+    elif tipo == 'COMPLEMENTO':
+        ingrediente.abastecer(ingrediente.id, ingrediente.inventario, 10)
+
+    return jsonify({
+        "mensaje": f'Ingrediente abastecido',
         "code": 200
     })

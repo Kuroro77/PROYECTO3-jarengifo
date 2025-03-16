@@ -15,3 +15,14 @@ def productos():
         "data": productos_schema.dump(lista_productos),
         "code": 200
     })
+
+@api_blueprint.route("/productos/<int:id>", methods=["GET"])
+def detalle(id):
+    producto = Productos()
+    detalle_producto = producto.detalle(id)
+
+    return jsonify({
+        "mensaje": f'Detalle producto',
+        "data": producto_schema.dump(detalle_producto),
+        "code": 200
+    })

@@ -42,17 +42,25 @@ def detalle(id):
         }), 401
 
 @api_blueprint.route("/productos/<string:nombre>", methods=["GET"])
+@login_required
 def detalle_x_nombre(nombre):
-    producto = Productos()
-    detalle_producto = producto.detalle_x_nombre(nombre)
+    if current_user.es_admin or current_user.es_empleado:
+        producto = Productos()
+        detalle_producto = producto.detalle_x_nombre(nombre)
 
-    return jsonify({
-        "mensaje": f'Detalle producto',
-        "data": producto_schema.dump(detalle_producto),
-        "code": 200
-    })
+        return jsonify({
+            "mensaje": f'Detalle producto',
+            "data": producto_schema.dump(detalle_producto),
+            "code": 200
+        })
+    else:
+        return jsonify({
+            "mensaje": "No autorizado",
+            "code": 401
+        }), 401
 
 @api_blueprint.route("/productos/calorias/<int:id>", methods=["GET"])
+@login_required
 def calorias(id):
     producto = Productos.detalle(id)
     tipo = producto.tipo
@@ -70,33 +78,48 @@ def calorias(id):
     })
 
 @api_blueprint.route("/productos/rentabilidad/<int:id>", methods=["GET"])
+@login_required
 def rentabilidad(id):
-    producto = Productos.detalle(id)
-    rentabilidad = producto.calcular_rentabilidad(producto.precio_publico, producto.ingrediente_uno, producto.ingrediente_dos, producto.ingrediente_tres)
+    if current_user.es_admin :
+        producto = Productos.detalle(id)
+        rentabilidad = producto.calcular_rentabilidad(producto.precio_publico, producto.ingrediente_uno, producto.ingrediente_dos, producto.ingrediente_tres)
 
-    return jsonify({
-        "mensaje": f'Rentabilidad producto',
-        "data": rentabilidad,
-        "code": 200
-    })
+        return jsonify({
+            "mensaje": f'Rentabilidad producto',
+            "data": rentabilidad,
+            "code": 200
+        })
+    else:
+        return jsonify({
+            "mensaje": "No autorizado",
+            "code": 401
+        }), 401
 
 @api_blueprint.route("/productos/costos/<int:id>", methods=["GET"])
+@login_required
 def costos(id):
-    producto = Productos.detalle(id)
-    tipo = producto.tipo
+    if current_user.es_admin:
+        producto = Productos.detalle(id)
+        tipo = producto.tipo
 
-    if tipo == 'COPA':
-        costo = producto.calcular_costo_copa(producto.ingrediente_uno, producto.ingrediente_dos, producto.ingrediente_tres)
-    elif tipo == 'MALTEADA':
-        costo = producto.calcular_costo_malteada()
+        if tipo == 'COPA':
+            costo = producto.calcular_costo_copa(producto.ingrediente_uno, producto.ingrediente_dos, producto.ingrediente_tres)
+        elif tipo == 'MALTEADA':
+            costo = producto.calcular_costo_malteada()
 
-    return jsonify({
-        "mensaje": f'Costo producto',
-        "data": costo,
-        "code": 200
-    })
+        return jsonify({
+            "mensaje": f'Costo producto',
+            "data": costo,
+            "code": 200
+        })
+    else:
+        return jsonify({
+            "mensaje": "No autorizado",
+            "code": 401
+        }), 401
 
 @api_blueprint.route("/productos/ventas/<int:id>", methods=["GET"])
+@login_required
 def ventas(id):
     try:
        Heladeria.ventas(id)
@@ -111,70 +134,112 @@ def ventas(id):
         })
 
 @api_blueprint.route("/ingredientes")
+@login_required
 def ingredientes():
-    ingredientes = Ingredientes()
-    lista_ingredientes = ingredientes.listar()
+    if current_user.es_admin or current_user.es_empleado:
+        ingredientes = Ingredientes()
+        lista_ingredientes = ingredientes.listar()
 
-    return jsonify({
-        "mensaje": f'Lista ingredientes',
-        "data": ingredientes_schema.dump(lista_ingredientes),
-        "code": 200
-    })
+        return jsonify({
+            "mensaje": f'Lista ingredientes',
+            "data": ingredientes_schema.dump(lista_ingredientes),
+            "code": 200
+        })
+    else:
+        return jsonify({
+            "mensaje": "No autorizado",
+            "code": 401
+        }), 401
 
 @api_blueprint.route("/ingredientes/<int:id>", methods=["GET"])
+@login_required
 def detalle_ingrediente(id):
-    ingredientes = Ingredientes()
-    detalle_ingrediente = ingredientes.detalle(id)
+    if current_user.es_admin or current_user.es_empleado:
+        ingredientes = Ingredientes()
+        detalle_ingrediente = ingredientes.detalle(id)
 
-    return jsonify({
-        "mensaje": f'Detalle ingrediente',
-        "data": ingrediente_schema.dump(detalle_ingrediente),
-        "code": 200
-    })
+        return jsonify({
+            "mensaje": f'Detalle ingrediente',
+            "data": ingrediente_schema.dump(detalle_ingrediente),
+            "code": 200
+        })
+    else:
+        return jsonify({
+            "mensaje": "No autorizado",
+            "code": 401
+        }), 401
 
 @api_blueprint.route("/ingredientes/<string:nombre>", methods=["GET"])
+@login_required
 def detalle_x_nombre_ingrediente(nombre):
-    ingredientes = Ingredientes()
-    detalle_ingrediente = ingredientes.detalle_x_nombre(nombre)
+    if current_user.es_admin or current_user.es_empleado:
+        ingredientes = Ingredientes()
+        detalle_ingrediente = ingredientes.detalle_x_nombre(nombre)
 
-    return jsonify({
-        "mensaje": f'Detalle ingrediente',
-        "data": ingrediente_schema.dump(detalle_ingrediente),
-        "code": 200
-    })
+        return jsonify({
+            "mensaje": f'Detalle ingrediente',
+            "data": ingrediente_schema.dump(detalle_ingrediente),
+            "code": 200
+        })
+    else:
+        return jsonify({
+            "mensaje": "No autorizado",
+            "code": 401
+        }), 401
 
 @api_blueprint.route("/ingredientes/sano/<int:id>", methods=["GET"])
+@login_required
 def sano(id):
-    ingrediente = Ingredientes.detalle(id)
-    es_sano = ingrediente.es_sano(ingrediente.calorias, ingrediente.es_vegetariano)
+    if current_user.es_admin or current_user.es_empleado:
+        ingrediente = Ingredientes.detalle(id)
+        es_sano = ingrediente.es_sano(ingrediente.calorias, ingrediente.es_vegetariano)
 
-    return jsonify({
-        "mensaje": f'Ingrediente sano ?',
-        "data": es_sano,
-        "code": 200
-    })
+        return jsonify({
+            "mensaje": f'Ingrediente sano ?',
+            "data": es_sano,
+            "code": 200
+        })
+    else:
+        return jsonify({
+            "mensaje": "No autorizado",
+            "code": 401
+        }), 401
 
 @api_blueprint.route("/ingredientes/abastecer/<int:id>", methods=["GET"])
+@login_required
 def abastecer(id):
-    ingrediente = Ingredientes.detalle(id)
-    tipo = ingrediente.tipo
+    if current_user.es_admin or current_user.es_empleado:
+        ingrediente = Ingredientes.detalle(id)
+        tipo = ingrediente.tipo
 
-    if tipo == 'BASE':
-        ingrediente.abastecer(ingrediente.id, ingrediente.inventario, 5)
-    elif tipo == 'COMPLEMENTO':
-        ingrediente.abastecer(ingrediente.id, ingrediente.inventario, 10)
+        if tipo == 'BASE':
+            ingrediente.abastecer(ingrediente.id, ingrediente.inventario, 5)
+        elif tipo == 'COMPLEMENTO':
+            ingrediente.abastecer(ingrediente.id, ingrediente.inventario, 10)
 
-    return jsonify({
-        "mensaje": f'Ingrediente abastecido',
-        "code": 200
-    })
+        return jsonify({
+            "mensaje": f'Ingrediente abastecido',
+            "code": 200
+        })
+    else:
+        return jsonify({
+            "mensaje": "No autorizado",
+            "code": 401
+        }), 401
 
 @api_blueprint.route("/ingredientes/renovar/<int:id>", methods=["GET"])
+@login_required
 def renovar(id):
-    ingrediente = Ingredientes.detalle(id)
-    ingrediente.renovar(id)
+    if current_user.es_admin or current_user.es_empleado:
+        ingrediente = Ingredientes.detalle(id)
+        ingrediente.renovar(id)
 
-    return jsonify({
-        "mensaje": f'Inventario renovado',
-        "code": 200
-    })
+        return jsonify({
+            "mensaje": f'Inventario renovado',
+            "code": 200
+        })
+    else:
+        return jsonify({
+            "mensaje": "No autorizado",
+            "code": 401
+        }), 401

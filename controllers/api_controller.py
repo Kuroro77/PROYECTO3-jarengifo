@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify
+from flask_login import login_required, current_user
 from models.productos import Productos, ProductosSchema
 from models.heladeria import Heladeria
 from models.ingredientes import Ingredientes, IngredientesSchema
@@ -22,15 +23,23 @@ def productos():
     })
 
 @api_blueprint.route("/productos/<int:id>", methods=["GET"])
+@login_required
 def detalle(id):
-    producto = Productos()
-    detalle_producto = producto.detalle(id)
+    if current_user.es_admin or current_user.es_empleado:
 
-    return jsonify({
-        "mensaje": f'Detalle producto',
-        "data": producto_schema.dump(detalle_producto),
-        "code": 200
-    })
+        producto = Productos()
+        detalle_producto = producto.detalle(id)
+
+        return jsonify({
+            "mensaje": f'Detalle producto',
+            "data": producto_schema.dump(detalle_producto),
+            "code": 200
+        })
+    else:
+        return jsonify({
+            "mensaje": "No autorizado",
+            "code": 401
+        }), 401
 
 @api_blueprint.route("/productos/<string:nombre>", methods=["GET"])
 def detalle_x_nombre(nombre):
